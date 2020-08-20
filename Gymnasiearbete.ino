@@ -4,6 +4,9 @@ TE18A
 Gymnasiearbete
 */
 
+// importerar vår kod. 
+#include "src/Distans/Distans.hpp"
+
 // setup funktionen körs en gång innan loopen:
 void setup() {
 
