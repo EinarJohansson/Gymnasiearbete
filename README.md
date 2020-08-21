@@ -7,7 +7,6 @@ Robot för automatisering av lagerarbete m.m 🤖
   - Öppna en terminal/kommandotolk.
   - Navigera till ett lämpligt direktiv, ex. Dokument eller Skrivbordet.
   - Copy-paste:a ```git clone https://github.com/EinarJohansson/Gymnasiearbete.git```
-  - Copy-paste:a ```git checkout dev```
   - Klart!🍺
 
 ### Göra ändringar
