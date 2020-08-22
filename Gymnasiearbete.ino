@@ -4,7 +4,7 @@ TE18A
 Gymnasiearbete
 */
 
-#define BAUD 115200
+#define BAUD 9600
 #define PORT 4210
 
 // importerar vår kod. 
