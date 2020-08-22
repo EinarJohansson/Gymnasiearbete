@@ -5,7 +5,7 @@ Gymnasiearbete
 */
 
 #define BAUD 9600
-#define PORT 4210
+#define PORT 8888
 
 // importerar vår kod. 
 #include "src/Distans/Distans.hpp"

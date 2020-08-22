@@ -10,6 +10,9 @@ Klient::Klient(int _port) : port(_port)
 // Funktion för att ansluta roboten till ett wifi-nätverk.
 void Klient::anslut(char* ssid, char* pass)
 {
+    // Gör inte en AP!
+    WiFi.mode(WIFI_STA);
+
     // Initiera anslutningen.
     WiFi.begin(ssid, pass);
 
@@ -17,7 +20,6 @@ void Klient::anslut(char* ssid, char* pass)
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.println("Kunde inte ansluta, försöker igen...");
-        Serial.println(port);
         delay(500);
     }
 
@@ -39,11 +41,21 @@ void Klient::lyssna()
     {
         Serial.printf("Tog emot %d bytes från %s, port %d\n", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
         
-        // Skriv över bufferten med meddelandet om det inte är tomt.
-        int len = Udp.read(inkommandePaket, 255);
-        if (len > 0)
-            inkommandePaket[len] = 0;
+        // Skriv över bufferten med meddelandet.
+        int len = Udp.read(inkommandePaket, UDP_TX_PACKET_MAX_SIZE);
+        inkommandePaket[len] = 0;
         
         Serial.printf("UDP paketet innehåller: %s\n", inkommandePaket);
+        prata("test\r\n");
     }
+}
+
+void Klient::prata(char* meddelande)
+{
+    Serial.printf("Skickar: till -> %s:%d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
+    
+    // Skicka meddelandet!
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    Udp.write(meddelande);
+    Udp.endPacket();
 }
