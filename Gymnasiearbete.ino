@@ -4,8 +4,7 @@ TE18A
 Gymnasiearbete
 */
 
-// ESP8266 baudrate ligger på 9600 bits-per-sekund.
-#define BAUD 9600
+#define BAUD 115200
 #define PORT 4210
 
 // importerar vår kod. 
@@ -19,11 +18,11 @@ Klient klient(PORT);
 void setup() {
     Serial.begin(BAUD);
     klient.anslut("SSID", "PASS");
-    klient.lyssna();
 }
 
 // loop funktionen kallas kontinuerligt:
 void loop()
 {
-
+    // Börja lyssna efter UDP-meddelanden.
+    klient.lyssna();
 }

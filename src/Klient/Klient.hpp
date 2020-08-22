@@ -8,6 +8,7 @@ struct Klient
     void lyssna();
 
     private:
+        char inkommandePaket[255]; 
         WiFiUDP Udp;
         int port;
 };
