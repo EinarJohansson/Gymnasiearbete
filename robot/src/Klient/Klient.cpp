@@ -52,7 +52,7 @@ void Klient::lyssna()
 
 void Klient::prata(char* meddelande)
 {
-    Serial.printf("Skickar: till -> %s:%d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
+    Serial.printf("Skickar till -> %s:%d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
     
     // Skicka meddelandet!
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
