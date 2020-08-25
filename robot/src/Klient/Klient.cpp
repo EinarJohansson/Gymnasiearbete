@@ -46,16 +46,34 @@ void Klient::lyssna()
         inkommandePaket[len] = 0;
         
         Serial.printf("UDP paketet innehåller: %s\n", inkommandePaket);
-        prata("test\r\n");
+        
+        if (prata("test\r\n"))
+            Serial.println("Lyckades skicka!");
+        else 
+            Serial.println("Kunde inte skicka :(");
     }
 }
 
-void Klient::prata(char* meddelande)
+int Klient::prata(char* meddelande)
 {
     Serial.printf("Skickar till -> %s:%d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
     
     // Skicka meddelandet!
-    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-    Udp.write(meddelande);
-    Udp.endPacket();
+    if (Udp.beginPacket(Udp.remoteIP(), Udp.remotePort()))
+    {
+        Udp.write(meddelande);
+        return Udp.endPacket();
+    } else return 0;
+}
+
+int Klient::prata(char* meddelande, IPAddress ip, int port)
+{
+    Serial.printf("Skickar till -> %s:%d\n", ip.toString().c_str(), port);
+    
+    // Skicka meddelandet!
+    if (Udp.beginPacket(ip, port))
+    {
+        Udp.write(meddelande);
+        return Udp.endPacket();
+    } else return 0;
 }
