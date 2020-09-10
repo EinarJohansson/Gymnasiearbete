@@ -1,9 +1,9 @@
 #include <WiFiUdp.h>
 #pragma once
 
-struct Klient 
+struct UDPServer 
 {
-    Klient(int);
+    UDPServer(int);
     void anslut(char*, char*);
     void lyssna();
     int prata(char*);

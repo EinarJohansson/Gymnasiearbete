@@ -9,20 +9,20 @@ Gymnasiearbete
 
 // importerar vår kod. 
 #include "src/Distans/Distans.hpp"
-#include "src/Klient/Klient.hpp" 
+#include "src/UDPServer/UDPServer.hpp" 
 
-// Initierar ett Klient objekt.
-Klient klient(PORT);
+// Initierar ett UDPServer objekt.
+UDPServer server(PORT);
 
 // setup funktionen körs en gång innan loopen:
 void setup() {
     Serial.begin(BAUD);
-    klient.anslut("SSID", "PASS");
+    server.anslut("SSID", "PASS");
 }
 
 // loop funktionen kallas kontinuerligt:
 void loop()
 {
     // Börja lyssna efter UDP-meddelanden.
-    klient.lyssna();
+    server.lyssna();
 }

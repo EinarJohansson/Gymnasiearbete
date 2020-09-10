@@ -1,14 +1,14 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include "Klient.hpp"
+#include "UDPServer.hpp"
 
-// Konstruktören för Klient strukturen.
-Klient::Klient(int _port) : port(_port)
+// Konstruktören för UDPServer strukturen.
+UDPServer::UDPServer(int _port) : port(_port)
 {
 }
 
 // Funktion för att ansluta roboten till ett wifi-nätverk.
-void Klient::anslut(char* ssid, char* pass)
+void UDPServer::anslut(char* ssid, char* pass)
 {
     // Gör inte en AP!
     WiFi.mode(WIFI_STA);
@@ -33,7 +33,7 @@ void Klient::anslut(char* ssid, char* pass)
 }
 
 // Börja lyssna efter meddelanden.
-void Klient::lyssna()
+void UDPServer::lyssna()
 {
     // Kolla om vi har fått ett paket.
     int packetSize = Udp.parsePacket();
@@ -47,32 +47,33 @@ void Klient::lyssna()
         
         Serial.printf("UDP paketet innehåller: %s\n", inkommandePaket);
         
-        if (prata("test\r\n"))
-            Serial.println("Lyckades skicka!");
-        else 
-            Serial.println("Kunde inte skicka :(");
+        prata("test\r\n");
     }
 }
 
-int Klient::prata(char* meddelande)
-{
+// Skicka meddelandet till en avsändare som etablerat kontakt med roboten.
+int UDPServer::prata(char* meddelande)
+{    
     Serial.printf("Skickar till -> %s:%d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
-    
-    // Skicka meddelandet!
+
+    // Starta en kontakt
     if (Udp.beginPacket(Udp.remoteIP(), Udp.remotePort()))
     {
+        // Skicka meddelandet
         Udp.write(meddelande);
         return Udp.endPacket();
     } else return 0;
 }
 
-int Klient::prata(char* meddelande, IPAddress ip, int port)
+// Skicka meddelandet och etablera kontakt med lyssnaren.
+int UDPServer::prata(char* meddelande, IPAddress ip, int port)
 {
     Serial.printf("Skickar till -> %s:%d\n", ip.toString().c_str(), port);
     
-    // Skicka meddelandet!
+    // Starta en kontakt
     if (Udp.beginPacket(ip, port))
     {
+        // Skicka meddelandet
         Udp.write(meddelande);
         return Udp.endPacket();
     } else return 0;
