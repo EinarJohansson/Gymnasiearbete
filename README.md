@@ -19,3 +19,4 @@ Robot för automatisering av lagerarbete m.m 🤖
   - gör om gör rätt noob
 - Om inga errors
   - Gör en pull request
+  noob
