@@ -11,7 +11,10 @@ def main():
         print("Port måste vara ett nummer!")
     else:
         # Lyckades
-        Klient(ip, port)
+        try:
+            Klient(ip, port)
+        except Exception as e:
+            print(e)
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:
