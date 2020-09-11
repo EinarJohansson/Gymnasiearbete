@@ -9,7 +9,7 @@ Robot för automatisering av lagerarbete m.m 🤖
   - Copy-paste:a ```git clone https://github.com/EinarJohansson/Gymnasiearbete.git```
   - Klart!🍺
 
-### Göra ändringar
+### Göra ändringar i robotens kod
 - Ladda ner [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 - Öppna upp ```.ino``` filen i Arduino IDE
 - Gå in i inställningar och lägg till ```https://arduino.esp8266.com/stable/package_esp8266com_index.json``` i fältet **Additional Boards manager URLs**
