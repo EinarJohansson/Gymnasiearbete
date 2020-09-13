@@ -1,23 +1,12 @@
 import sys
-from klient import Klient
+from server import Server
 
 def main():
-    ip = sys.argv[1]
-
-    # Kollar så att porten kan konverteras till ett nummer
-    try:
-        port = int(sys.argv[2])
-    except ValueError:
-        print("Port måste vara ett nummer!")
-    else:
-        # Lyckades
-        try:
-            Klient(ip, port)
-        except Exception as e:
-            print(e)
+    '''
+    Programmets main funktion
+    '''
+    server = Server()
+    server.lyssna()
 
 if __name__ == "__main__":
-    if len(sys.argv) == 3:
-        main()
-    else:
-        print('Användning: python3 main.py [IP] [PORT]')
+    main()

@@ -1,16 +1,16 @@
 #include <WiFiUdp.h>
 #pragma once
 
-struct UDPServer 
+struct Klient 
 {
-    UDPServer(int);
+    Klient(IPAddress, int);
     void anslut(char*, char*);
     void lyssna();
-    int prata(char*);
-    int prata(char*, IPAddress, int);
+    void prata(char*);
 
     private:
         char inkommandePaket[UDP_TX_PACKET_MAX_SIZE + 1]; 
         WiFiUDP Udp;
         int port;
+        IPAddress ip;
 };
