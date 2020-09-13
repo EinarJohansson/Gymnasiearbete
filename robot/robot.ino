@@ -27,7 +27,6 @@ void setup() {
 void loop()
 {
     // Börja lyssna efter UDP-meddelanden.
-    // klient.lyssna();
     klient.prata("Är du där?");
     delay(1000);
 }

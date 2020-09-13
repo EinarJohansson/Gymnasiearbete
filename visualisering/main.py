@@ -1,4 +1,3 @@
-import sys
 from server import Server
 
 def main():
