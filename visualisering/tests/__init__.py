@@ -1,0 +1,1 @@
+# Fil för att kunna importera kod från tests direktivet.

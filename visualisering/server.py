@@ -44,8 +44,13 @@ class Server:
                 data, addr = self.sock.recvfrom(1024)
                 print('Tog emot:', str(data, 'utf-8'))
 
-                # Skicka ett svar
-                self.sock.sendto(str.encode('Tja!'), addr)
+                # Skicka tillbaks ett svar
+                if str(data, 'utf-8') == 'test': 
+                    # Svarar på unittest
+                    self.sock.sendto(str.encode('success'), addr)
+                else:
+                    # Svarar roboten
+                    self.sock.sendto(str.encode('Tja!'), addr)
             except KeyboardInterrupt:
                 print('\nAvslutar servern')
                 self.sock.close()
