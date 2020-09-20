@@ -1,4 +1,4 @@
-import socket
+import socket, queue
 
 class Server:
     '''
@@ -11,21 +11,22 @@ class Server:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.address = (self.serverIP(), 8888)
         self.sock.bind(self.address)
-    
+        self.kö = queue.Queue()
+
     def serverIP(self) -> str:
         '''
         Returnerar serverns ip-adress.\n
-        Öpnnar upp en ny socket bara för att få tag på ip addressen, sen tas den bort.
+        Öppnar upp en ny socket bara för att få tag på ip addressen, sen tas den bort.
         '''
         dummy = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            # Spelar ingen roll om vi kan nå adressen eller inte.
+            # Spelar ingen roll om det går att nå adressen eller inte.
             dummy.connect(('8.8.8.8', 1))
             ip = dummy.getsockname()[0]
         except Exception:
-            # Be användaren manuellt skriva in sin IP.
+            # Be användaren skriva in sin IP.
             print('Kunde inte hitta din IP')
-            ip = input('Skriv in din IP:')
+            ip = input('Skriv in din IP: ')
         finally:
             # Ta bort dummy.
             dummy.close()
@@ -45,13 +46,13 @@ class Server:
                 print('Tog emot:', str(data, 'utf-8'))
 
                 # Skicka tillbaks ett svar
-                if str(data, 'utf-8') == 'test': 
-                    # Svarar på unittest
-                    self.sock.sendto(str.encode('success'), addr)
-                else:
-                    # Svarar roboten
-                    self.sock.sendto(str.encode('Tja!'), addr)
+                self.sock.sendto(str.encode('Tja!'), addr)
+
+                # Lägg till data i kön som kartan sedan avläser
+                self.kö.put(str(data, 'utf-8'))
+                
             except KeyboardInterrupt:
                 print('\nAvslutar servern')
                 self.sock.close()
+                self.kö.join()
                 break
