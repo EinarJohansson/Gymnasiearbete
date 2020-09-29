@@ -10,10 +10,12 @@ def main():
     karta = Karta()     # Visualisera vår data.
 
     tråd1 = threading.Thread(target=server.lyssna, daemon=True)
-    tråd2 = threading.Thread(target=karta.läs, args=(server.kö,))
+    tråd2 = threading.Thread(target=karta.läs, args=(server.kö,), daemon=True)
     
     tråd1.start()
     tråd2.start()
+
+    karta.visa()
 
 if __name__ == '__main__':
     main()
