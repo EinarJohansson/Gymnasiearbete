@@ -12,6 +12,10 @@ class Server:
         self.address = (self.serverIP(), 8888)
         self.sock.bind(self.address)
         self.kö = queue.Queue()
+    
+    def __del__(self):
+        self.sock.close()
+        self.kö.join()
 
     def serverIP(self) -> str:
         '''
@@ -40,19 +44,12 @@ class Server:
         Hantera UDP-meddelanden. 
         '''
         while True:
-            try:
-                # Buffert på 1024 bytes
-                data, addr = self.sock.recvfrom(1024)
-                print('Tog emot:', str(data, 'utf-8'))
+            # Buffert på 1024 bytes
+            data, addr = self.sock.recvfrom(1024)
+            print('Tog emot:', str(data, 'utf-8'))
 
-                # Skicka tillbaks ett svar
-                self.sock.sendto(str.encode('Tja!'), addr)
+            # Skicka tillbaks ett svar
+            self.sock.sendto(str.encode('Tja!'), addr)
 
-                # Lägg till data i kön som kartan sedan avläser
-                self.kö.put(str(data, 'utf-8'))
-                
-            except KeyboardInterrupt:
-                print('\nAvslutar servern')
-                self.sock.close()
-                self.kö.join()
-                break
+            # Lägg till data i kön som kartan sedan avläser
+            self.kö.put(str(data, 'utf-8'))
