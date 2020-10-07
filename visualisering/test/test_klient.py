@@ -57,9 +57,10 @@ class Klient:
 def main():
     klient = Klient()
 
+    steg = [str(random.randint(-10, 10)) for i in range(2)]
+
     for vinkel in range(180):
         distans = random.randint(0, 450) # 0cm till 450cm
-        steg = [str(random.randint(0, 100)) for i in range(4)]
         meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
 
         klient.skicka(meddelande)

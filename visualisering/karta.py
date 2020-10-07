@@ -1,6 +1,8 @@
 import threading, queue
 import matplotlib.pyplot as plt 
+import matplotlib.animation as anim
 import numpy as np
+from koordinat import Koordinat
 
 class Karta:
     '''
@@ -8,15 +10,13 @@ class Karta:
     '''
     def __init__(self):
         '''
-        Initierar kartan med lista för koordinaterna.
+        Initierar kartan.
         '''
         self.koordinater = list()
-        
         self.fig = plt.figure()
+        self.ax = self.fig.gca() 
 
-        self.ax = self.fig.gca()
-        self.ax.set_xticks(np.arange(0, 1, 0.1))
-        self.ax.set_yticks(np.arange(0, 1., 0.1))
+        plt.grid() # Rutnät över grafen
 
     def läs(self, kö: queue.Queue):
         '''
@@ -25,13 +25,22 @@ class Karta:
         while True:
             data = kö.get()
             print('Från kö:', data)
-            self.koordinater.append(data)
+            self.koordinater.append(Koordinat(data))
             kö.task_done()
 
     def visa(self):
-        x = np.arange(0, 1, 0.05)
-        y = np.power(x, 2)
-
-        plt.grid()
-        plt.scatter(x, y)
+        '''
+        Visa kartan.
+        '''
+        a = anim.FuncAnimation(self.fig, self.uppdatera, repeat=True, interval=2000)
         plt.show()
+
+    def uppdatera(self, i):
+        ''' 
+        Uppdatera kartan med nya värden.
+        '''
+        if self.koordinater:
+            x = [kord.x for kord in self.koordinater]
+            y = [kord.y for kord in self.koordinater]
+            
+            plt.scatter(x, y) # Markera robotens position med en prick
