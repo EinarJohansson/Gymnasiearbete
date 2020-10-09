@@ -1,5 +1,6 @@
 import socket
 import random
+import math
 
 class Klient:
     '''
@@ -59,8 +60,16 @@ def main():
 
     steg = [str(random.randint(-10, 10)) for i in range(2)]
 
-    for vinkel in range(180):
-        distans = random.randint(0, 450) # 0cm till 450cm
+    for vinkel in range(0, 91, 1): # 0° <= v <= 90°
+        # distans = random.randint(0, 200) # 0cm till 450cm
+        distans = int(math.log10(50 + vinkel)) * 10 + 4
+        meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
+        
+        klient.skicka(meddelande)
+
+    for vinkel in range(-90, 0, 1): # -90° <= v < 0° 
+        # distans = random.randint(0, 200) # 0cm till 450cm
+        distans = int(math.log10(50 + abs(vinkel))) * 10 + 4
         meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
 
         klient.skicka(meddelande)
