@@ -58,18 +58,18 @@ class Klient:
 def main():
     klient = Klient()
 
-    steg = [str(random.randint(-10, 10)) for i in range(2)]
-
+    steg = [str(random.randint(0, 10)) for i in range(2)]
+    # steg = ['0', '0']
     for vinkel in range(0, 91, 1): # 0° <= v <= 90°
         # distans = random.randint(0, 200) # 0cm till 450cm
-        distans = int(math.log10(50 + vinkel)) * 10 + 4
+        distans = int(math.log10(100 + vinkel)) * 100
         meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
         
         klient.skicka(meddelande)
 
-    for vinkel in range(-90, 0, 1): # -90° <= v < 0° 
+    for vinkel in range(-90, 1, 1): # -90° <= v <= 0° 
         # distans = random.randint(0, 200) # 0cm till 450cm
-        distans = int(math.log10(50 + abs(vinkel))) * 10 + 4
+        distans = int(math.log10(100 + abs(vinkel))) * 100
         meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
 
         klient.skicka(meddelande)

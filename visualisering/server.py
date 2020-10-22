@@ -46,7 +46,7 @@ class Server:
         while True:
             # Buffert på 1024 bytes
             data, addr = self.sock.recvfrom(1024)
-            print('Tog emot:', str(data, 'utf-8'))
+            # print('Tog emot:', str(data, 'utf-8'))
 
             # Skicka tillbaks ett svar
             self.sock.sendto(str.encode('Tja!'), addr)
