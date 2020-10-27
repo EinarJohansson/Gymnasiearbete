@@ -30,7 +30,7 @@ Robot för automatisering av lagerarbete m.m 🤖
   - Gör en pull request
   noob
 
-### Göra ändringar i koden för visualering:
+### Göra ändringar i koden för visualering
  - Innan virtuella miljön avaktiveras
    - Navigera till Gymnasiearbete
    - ```pip freeze > requirements.txt```

@@ -2,6 +2,7 @@ import threading, queue
 import matplotlib.pyplot as plt 
 import matplotlib.animation as anim
 from koordinat import Koordinat
+from databas import Databas
 from math import cos, sin, pi
 
 class Karta:
@@ -13,13 +14,15 @@ class Karta:
         Initierar kartan.
         '''
         self.koordinater = list()
+        self.db = Databas()
+
         self.fig = plt.figure()
 
         self.ax = self.fig.gca()
         self.ax.set_ylabel('cm')
         self.ax.set_xlabel('cm')
 
-        self.position = (0, 0)
+        self.position = (0, 0) # Robotens startpostion markeras från origo
 
         plt.grid() # Rutnät över grafen
 
@@ -35,8 +38,12 @@ class Karta:
                 self.position = (koord.x, koord.y)
 
             vägg = self.konvertera(koord)
-            self.koordinater.append(vägg)    
-    
+            self.koordinater.append(vägg)
+
+            if len(self.koordinater) == 180:
+                self.db.spara(self.koordinater) 
+                self.koordinater.clear()
+
             kö.task_done()
 
     def konvertera(self, koordinat: Koordinat) -> tuple:
@@ -46,7 +53,7 @@ class Karta:
         x = koordinat.distans * cos(pi/2 - koordinat.vinkel) + koordinat.x
         y = koordinat.distans * sin(pi/2 - koordinat.vinkel) + koordinat.y
         
-        return (x, y)
+        return {'x': x, 'y': y, 'stegX': koordinat.x, 'stegY': koordinat.y} # Informationen som lagras i databasen.
 
     def visa(self):
         '''
@@ -59,9 +66,13 @@ class Karta:
         ''' 
         Uppdatera kartan med nya värden.
         '''
-        if self.koordinater:
-            x = [kord[0] for kord in self.koordinater]
-            y = [kord[1] for kord in self.koordinater]
-            
-            plt.scatter(x, y) # Markera väggarnas position med en prick
-            plt.plot(self.position, '*') # Markera vart roboten är i koordinatsystemet
+        koordinater = self.db.kista({'_id': 0, 'x': 1, 'y': 1})
+
+        x, y = [], []
+
+        for koordinat in koordinater:
+            x.append(koordinat['x'])
+            y.append(koordinat['y'])
+        
+        plt.scatter(x, y) # Markera väggarnas position med en prick
+        plt.plot(self.position, '*') # Markera vart roboten är i koordinatsystemet
