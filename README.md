@@ -8,6 +8,15 @@ Robot för automatisering av lagerarbete m.m 🤖
   - Navigera till ett lämpligt direktiv, ex. Dokument eller Skrivbordet.
   - Copy-paste:a ```git clone https://github.com/EinarJohansson/Gymnasiearbete.git```
   - Klart!🍺
+  
+### Initialisera projektet
+ - Navigera till mappen Gymnasiearbete.
+ - Gör en virtuell miljö:
+   - ```python3 -m venv venv ```
+   - ```source venv/bin/activate```
+   - ```pip install -r requirements.txt```
+ - När inte längre vill använda den virtuella miljön
+   - ```deactivate```
 
 ### Göra ändringar i robotens kod
 - Ladda ner [Arduino IDE](https://www.arduino.cc/en/Main/Software)
@@ -20,3 +29,9 @@ Robot för automatisering av lagerarbete m.m 🤖
 - Om inga errors
   - Gör en pull request
   noob
+
+### Göra ändringar i koden för visualering:
+ - Innan virtuella miljön avaktiveras
+   - Navigera till Gymnasiearbete
+   - ```pip freeze > requirements.txt```
+   - ```deactivate```
