@@ -12,7 +12,7 @@ Robot för automatisering av lagerarbete m.m 🤖
 ### Initialisera projektet
  - Navigera till mappen Gymnasiearbete.
  - Gör en virtuell miljö:
-   - ```python3 -m venv venv ```
+   - ```python3 -m venv venv```
    - ```source venv/bin/activate```
    - ```pip install -r requirements.txt```
  - När inte längre vill använda den virtuella miljön
@@ -20,7 +20,7 @@ Robot för automatisering av lagerarbete m.m 🤖
 
 ### Göra ändringar i robotens kod
 - Ladda ner [Arduino IDE](https://www.arduino.cc/en/Main/Software)
-- Öppna upp ```.ino``` filen i Arduino IDE
+- Öppna upp ```robot.ino``` i Arduino IDE
 - Gå in i inställningar och lägg till ```https://arduino.esp8266.com/stable/package_esp8266com_index.json``` i fältet **Additional Boards manager URLs**
 - Välj kortet ```Generic ESP8266 Module``` under fliken verktyg
 - Kompilera projektet genom att klicka på ✅ symbolen

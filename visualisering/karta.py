@@ -41,7 +41,7 @@ class Karta:
             self.koordinater.append(vägg)
 
             if len(self.koordinater) == 180:
-                self.db.spara(self.koordinater) 
+                self.db.spara(self.koordinater, self.position) 
                 self.koordinater.clear()
 
             kö.task_done()
@@ -53,7 +53,7 @@ class Karta:
         x = koordinat.distans * cos(pi/2 - koordinat.vinkel) + koordinat.x
         y = koordinat.distans * sin(pi/2 - koordinat.vinkel) + koordinat.y
         
-        return {'x': x, 'y': y, 'stegX': koordinat.x, 'stegY': koordinat.y} # Informationen som lagras i databasen.
+        return {'x': x, 'y': y} # Informationen som lagras i databasen.
 
     def visa(self):
         '''
@@ -66,11 +66,11 @@ class Karta:
         ''' 
         Uppdatera kartan med nya värden.
         '''
-        koordinater = self.db.kista({'_id': 0, 'x': 1, 'y': 1})
+        koordinater = self.db.kista({'_id': 0, 'koordinater': 1})
 
         x, y = [], []
 
-        for koordinat in koordinater:
+        for koordinat in koordinater[0]['koordinater']:
             x.append(koordinat['x'])
             y.append(koordinat['y'])
         
