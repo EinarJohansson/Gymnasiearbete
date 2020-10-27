@@ -55,24 +55,24 @@ class Klient:
         
         print('tog emot:', data)
 
+    def test(self, vinkel: int, steg: str):
+        distans = int(math.log10(100 + abs(vinkel))) * 100
+        meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
+        
+        self.skicka(meddelande)
+
 def main():
     klient = Klient()
 
     steg = [str(random.randint(0, 10)) for i in range(2)]
-    # steg = ['0', '0']
+
     for vinkel in range(0, 91, 1): # 0° <= v <= 90°
         # distans = random.randint(0, 200) # 0cm till 450cm
-        distans = int(math.log10(100 + vinkel)) * 100
-        meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
-        
-        klient.skicka(meddelande)
+        klient.test(vinkel, steg)
 
     for vinkel in range(-90, 1, 1): # -90° <= v <= 0° 
         # distans = random.randint(0, 200) # 0cm till 450cm
-        distans = int(math.log10(100 + abs(vinkel))) * 100
-        meddelande = str(distans) + ';' + str(vinkel) + ';' + ';'.join(steg)
-
-        klient.skicka(meddelande)
+        klient.test(vinkel, steg)
 
     klient.motta()
     klient.sock.close()

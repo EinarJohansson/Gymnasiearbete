@@ -64,19 +64,18 @@ class Databas:
         Skapar en ny karta.
         '''
         print('Gör en ny karta')
+
         tid = datetime.now()
         namn = tid.strftime("%Y-%m-%d %H:%M:%S")
+        
         return self.db[namn]
 
     def spara(self, koordinater: list, position: tuple):
         '''
         Sparar en bunt koordinater som hör ihop med en viss karta i databasen.
         '''
-
         if self.karta:
-
             data = {'koordinater': koordinater, 'stegX': position[0], 'stegY': position[1]}
-
             return self.karta.insert_one(data)
         else:
             print('ingen karta har valts!')
