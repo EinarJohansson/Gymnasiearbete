@@ -53,7 +53,7 @@ class Karta:
         x = koordinat.distans * cos(pi/2 - koordinat.vinkel) + koordinat.x
         y = koordinat.distans * sin(pi/2 - koordinat.vinkel) + koordinat.y
         
-        return {'x': x, 'y': y} # Informationen som lagras i databasen.
+        return {'x': x, 'y': y} # Informationen som lagras i databasen tillsammans med positionen.
 
     def visa(self):
         '''
@@ -68,10 +68,12 @@ class Karta:
         '''
         cursor = self.db.kista({'_id': 0, 'koordinater': 1})
 
-        if cursor.count():
-            x, y = zip(*[(koordinat['x'], koordinat['y']) for koordinater in cursor for koordinat in koordinater['koordinater']])
-        else:
-            x, y = [], []
+        x, y = [], []
+
+        for koordinater in cursor:
+           for koordinat in koordinater['koordinater']:
+               x.append(koordinat['x'])
+               y.append(koordinat['y']) 
 
         plt.scatter(x, y) # Markera väggarnas position med en prick
         plt.plot(self.position, '*') # Markera vart roboten är i koordinatsystemet
