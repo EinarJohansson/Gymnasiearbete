@@ -73,8 +73,8 @@ class Karta:
         for koordinater in cursor:
            for koordinat in koordinater['koordinater']:
                x.append(koordinat['x'])
-               y.append(koordinat['y']) 
+               y.append(koordinat['y'])
 
-        plt.scatter(x, y) # Markera väggarnas position med en prick
-        plt.plot(self.position, '*') # Markera vart roboten är i koordinatsystemet
+        plt.scatter(x, y)               # Markera väggarnas position med en prick
+        plt.plot(*self.position, '*')    # Markera vart roboten är i koordinatsystemet
         cursor.close()
