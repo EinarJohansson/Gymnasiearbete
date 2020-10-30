@@ -68,12 +68,11 @@ class Karta:
         '''
         cursor = self.db.kista({'_id': 0, 'koordinater': 1})
 
-        x, y = [], []
-
-        for koordinater in cursor:
-            for koordinat in koordinater['koordinater']:
-                x.append(koordinat['x'])
-                y.append(koordinat['y'])
+        if cursor.count():
+            x, y = zip(*[(koordinat['x'], koordinat['y']) for koordinater in cursor for koordinat in koordinater['koordinater']])
+        else:
+            x, y = [], []
 
         plt.scatter(x, y) # Markera väggarnas position med en prick
         plt.plot(self.position, '*') # Markera vart roboten är i koordinatsystemet
+        cursor.close()
