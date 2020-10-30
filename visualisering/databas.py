@@ -53,9 +53,10 @@ class Databas:
                 index = int(input('Vilken karta vill du använda? (0-{}): '.format(antal-1)))
                 karta = kartor[index]
             except Exception:
-                print('Felaktig inmatning')
-            
-            return self.db[karta]
+                print('Felaktig inmatning, väljer senaste kartan')
+                karta = kartor[antal-1]
+            finally:
+                return self.db[karta]
         else:
             return self.ny()
 
