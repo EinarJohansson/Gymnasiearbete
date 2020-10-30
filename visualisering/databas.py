@@ -22,7 +22,7 @@ class Databas:
         '''
         return self.db.list_collection_names()
 
-    def kista(self, villkor: dict = {}) -> list:
+    def kista(self, villkor: dict = {}) -> pymongo.cursor:
         '''
         Öppnar upp kistan och returnerar dess koordinater.
         '''
