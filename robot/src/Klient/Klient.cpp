@@ -59,7 +59,5 @@ void Klient::prata(char* meddelande)
         Udp.write(meddelande);
         Udp.endPacket();
         Serial.printf("Skickade: %s\n", meddelande);
-        // Ta emot serverns svar
-        lyssna();
     }
 }

@@ -2,15 +2,15 @@
 #include <Arduino.h>
 #include "Distans.hpp"
 
-// Beräkna distansen mellan ett objekt och roboten.
+// Beräkna distansen mellan ett objekt och roboten i enhet centimeter.
 int distans()
 {
-    // Nummerna på brädan för våra pins.
-    const int triggerPin = 9;
-    const int echoPin = 10;
+    // Nummerna på brädan för våra pins. Lite snuskigt att både ha de här och i robot.ino :(
+    const int triggerPin = 5; // D1
+    const int echoPin = 16; // D0
 
-    // Ljudets hastighet i mikrosekunder. -> https://www.bananarobotics.com/shop/HC-SR04-Ultrasonic-Distance-Sensor
-    const double ljudHastighet = 0.0034;
+    // Ljudets hastighet -> https://create.arduino.cc/projecthub/abdularbi17/ultrasonic-sensor-hc-sr04-with-arduino-tutorial-327ff6
+    const double ljudHastighet = 0.034;
 
     // Chilla lite i 2 ms.
     digitalWrite(triggerPin, LOW);
