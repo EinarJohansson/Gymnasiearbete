@@ -1,5 +1,7 @@
 # Gymnasiearbete 🤠
 Robot för automatisering av lagerarbete m.m 🤖
+![Schema](https://raw.githubusercontent.com/EinarJohansson/Gymnasiearbete/dev/schematic.png)
+
 
 ### Skaffa koden
 - Ladda ner [git](https://git-scm.com/downloads)
