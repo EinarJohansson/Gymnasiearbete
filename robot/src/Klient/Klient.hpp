@@ -5,7 +5,7 @@ struct Klient
 {
     Klient(IPAddress, int);
     void anslut(char*, char*);
-    void lyssna();
+    String lyssna();
     void prata(char*);
 
     private:

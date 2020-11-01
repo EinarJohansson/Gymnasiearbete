@@ -23,10 +23,9 @@ void snurra(Servo &servo, Klient &klient) {
             
             skanna(klient, String(vinkel), "0", "0");     
         }
-        Serial.printf("%d", pos);
-        //klient.lyssna();
         
-    } else if (pos == RIGHT) {
+    } else if (pos == RIGHT)
+    {
         for (int vinkel = RIGHT; vinkel > LEFT; vinkel -= 1)
         {
             // Snurra 1°
@@ -34,13 +33,13 @@ void snurra(Servo &servo, Klient &klient) {
             pos -= 1;
 
             // Vänta på att den ska ha snurrat 1°
-            delay(15);
+            delay(50);
 
             skanna(klient, String(vinkel), "0", "0");    
         }
-        Serial.printf("%d", pos);
-        //klient.lyssna();
     }
+    String stig = klient.lyssna();
+    Serial.println(stig);
 }
 
 void skanna(Klient &klient, String vinkel, String stegX, String stegY)

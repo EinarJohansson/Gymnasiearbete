@@ -33,7 +33,7 @@ void Klient::anslut(char* ssid, char* pass)
 }
 
 // Börja lyssna efter meddelanden.
-void Klient::lyssna()
+String Klient::lyssna()
 {
     // Kolla om vi har fått ett paket.
     int packetSize = Udp.parsePacket();
@@ -46,6 +46,8 @@ void Klient::lyssna()
         inkommandePaket[len] = 0;
         
         Serial.printf("UDP paketet innehåller: %s\n", inkommandePaket);
+
+        return String(inkommandePaket);
     }
 }
 
