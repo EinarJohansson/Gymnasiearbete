@@ -50,8 +50,8 @@ class Karta:
         '''
         Hemmasnickrad matte, inte säker på om det fungerar men ger lovande resultat.
         '''
-        x = koordinat.distans * cos(pi/2 - koordinat.vinkel) + koordinat.x
-        y = koordinat.distans * sin(pi/2 - koordinat.vinkel) + koordinat.y
+        x = koordinat.distans * cos(pi - koordinat.vinkel) + koordinat.x
+        y = koordinat.distans * sin(pi - koordinat.vinkel) + koordinat.y
         
         return {'x': x, 'y': y} # Informationen som lagras i databasen tillsammans med positionen.
 
@@ -76,5 +76,5 @@ class Karta:
                y.append(koordinat['y'])
 
         plt.scatter(x, y)               # Markera väggarnas position med en prick
-        plt.plot(*self.position, '*')    # Markera vart roboten är i koordinatsystemet
+        plt.plot(*self.position, '*')   # Markera vart roboten är i koordinatsystemet
         cursor.close()
