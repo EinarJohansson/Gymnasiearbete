@@ -9,7 +9,7 @@
 #include "src/Klient/Klient.hpp"
 
 // Serverns ip
-IPAddress IP(8, 8, 8, 8);
+IPAddress IP(172, 29, 249, 62);
 
 // Initierar ett Klient objekt.
 Klient klient(IP, PORT);
@@ -22,12 +22,12 @@ void setup() {
     Serial.begin(BAUD);
     pinMode(TRIGGER_PIN, OUTPUT);
     pinMode(ECHO_PIN, INPUT);
-    klient.anslut("SSID", "PASS");
+    klient.anslut("nrk_edu2", "pskDgDans080108");
     servo.attach(SERVO_PIN);
 }
 
 // loop funktionen kallas kontinuerligt:
 void loop()
 {
-    snurra(servo, klient);
+  snurra(servo, klient);
 }

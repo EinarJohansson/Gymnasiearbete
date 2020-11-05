@@ -53,3 +53,7 @@ class Server:
 
             # Lägg till data i kön som kartan sedan avläser
             self.kö.put(str(data, 'utf-8'))
+
+if __name__ == "__main__":
+    s = Server()
+    s.serverIP()
