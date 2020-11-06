@@ -2,4 +2,4 @@
 #pragma once
 
 // Deklarerar funktioner och variabler. Dessa defineras i Distans.cpp.
-int distans();
+unsigned int distans();

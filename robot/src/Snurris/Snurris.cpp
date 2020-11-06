@@ -19,7 +19,7 @@ void snurra(Servo &servo, Klient &klient) {
             pos +=1;
 
             // Vänta på att den ska ha snurrat 1°
-            delay(50);
+            delay(25);
             
             skanna(klient, String(vinkel), "0", "0");     
         }
@@ -33,7 +33,7 @@ void snurra(Servo &servo, Klient &klient) {
             pos -= 1;
 
             // Vänta på att den ska ha snurrat 1°
-            delay(50);
+            delay(25);
 
             skanna(klient, String(vinkel), "0", "0");    
         }
