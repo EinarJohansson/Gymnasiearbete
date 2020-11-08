@@ -1,5 +1,5 @@
-#define TRIGGER_PIN 5
-#define ECHO_PIN 16
+#define TRIGGER_PIN 5 // D1
+#define ECHO_PIN 16 // D0
 #define MAX_DISTANCE 450
 #define ITERATIONS 5
 
