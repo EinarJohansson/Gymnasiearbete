@@ -48,7 +48,7 @@ class Karta:
         '''
         Konvertera mätningsdata till en punkt i förhållande till roboten.
         '''
-        # Hemmasnickrad matte, inte säker på om det fungerar men ger lovande resultat.
+        # Konverterar polär koordinat till kartesisk koordinat
         x = koordinat.distans * cos(pi - koordinat.vinkel) + koordinat.x
         y = koordinat.distans * sin(pi - koordinat.vinkel) + koordinat.y
         
@@ -91,7 +91,7 @@ class Karta:
                y.append(koordinat['y'])
 
         # https://en.wikipedia.org/wiki/Histogram#Square-root_choice
-        uppdelning = int(sqrt(len(x)))
+        uppdelning = int(sqrt(len(x))) or 50
 
         # Visa frekvensen av träffar för alla väggars koordinater
         counts, xedges, yedges, im = self.axs[0].hist2d(x, y, bins=uppdelning, cmap=plt.cm.Reds)
