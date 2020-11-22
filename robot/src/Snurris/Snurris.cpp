@@ -3,8 +3,11 @@
 
 #include "Snurris.hpp"
 #include "../Distans/Distans.hpp"
+#include "../DCMDriverL293D/DCMDriverL293D.hpp"
+#include "../config.hpp"
 
 int pos = LEFT;
+DCMDriverL293D DCmotorer(DCMOTORDRIVERA_PIN_ENABLE1,DCMOTORDRIVERA_PIN_IN1,DCMOTORDRIVERA_PIN_IN2,DCMOTORDRIVERA_PIN_ENABLE2,DCMOTORDRIVERA_PIN_IN3,DCMOTORDRIVERA_PIN_IN4);
 
 void snurra(Servo &servo, Klient &klient) {
     if (!servo.attached())
@@ -40,6 +43,13 @@ void snurra(Servo &servo, Klient &klient) {
     }
     String stig = klient.lyssna();
     Serial.println(stig);
+    
+    DCmotorer.setMotorA(200,1);
+    DCmotorer.setMotorB(200,0);
+    delay(2000);
+    //Stop both motors
+    DCmotorer.stopMotors();
+    delay(2000);
 }
 
 void skanna(Klient &klient, String vinkel, String stegX, String stegY)
