@@ -1,10 +1,6 @@
-#define TRIGGER_PIN 5 // D1
-#define ECHO_PIN 16 // D0
-#define MAX_DISTANCE 450
-#define ITERATIONS 5
-
 #include "Distans.hpp"
 #include "../NewPing/NewPing.h"
+#include "../config.hpp"
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 

@@ -1,8 +1,5 @@
-#define BAUD 115200
-#define PORT 8888
-#define SERVO_PIN 0
-
-// importerar kod. 
+// importerar kod.
+#include "src/config.hpp"
 #include "src/Snurris/Snurris.hpp"
 #include "src/Klient/Klient.hpp"
 
@@ -18,7 +15,7 @@ Servo servo;
 // setup funktionen körs en gång innan loopen:
 void setup() {
     Serial.begin(BAUD);
-    klient.anslut("nrk_edu2", "pskDgDans080108");
+    klient.anslut(SSID, PASS);
     servo.attach(SERVO_PIN);
 }
 
