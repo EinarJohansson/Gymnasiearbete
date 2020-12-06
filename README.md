@@ -15,7 +15,7 @@ Robot för automatisering av lagerarbete m.m 🤖
  - Navigera till mappen Gymnasiearbete.
  - Gör en virtuell miljö:
    - ```python3 -m venv venv```
-   - ```source venv/bin/activate```
+   - ```source venv/bin/activate``` eller ```venv\\Scripts\\activate.bat```
    - ```pip install -r requirements.txt```
  - När inte längre vill använda den virtuella miljön
    - ```deactivate```

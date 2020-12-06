@@ -66,7 +66,7 @@ def main():
 
     steg = [str(random.randint(0, 10)) for i in range(2)]
 
-    for vinkel in range(0, 180, 1): # 0° <= v <= 90°
+    for vinkel in range(0, 180, 1): # 0° <= v <= 180°
         klient.test(vinkel, steg)
 
     klient.motta()
