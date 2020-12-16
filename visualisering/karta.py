@@ -18,18 +18,18 @@ class Karta:
         self.koordinater = list()
         self.db = Databas()
 
-        self.fig, self.axs = plt.subplots(1, 2)                 # En rad, två kolumner
+        self.fig, self.axs = plt.subplots(1, 2)     # En rad, två kolumner
         self.fig.canvas.mpl_connect('button_press_event', self.onclick)
         
-        self.cb = None                                          # Colorbaren för histogramet
+        self.cb = None                              # Colorbaren för histogramet
         
-        self.grid, self.xedges, self.yedges = None, None, None  # Bestäms av histogramet i uppdatera
+        self.grid, self.xedges, self.yedges = None, None, None
         
-        self.position = (0, 0)                                  # Robotens startpostion markeras från origo
+        self.position = (0, 0)                      # Robotens startpostion markeras från origo
 
     def onclick(self, event):
-        if event.inaxes is self.axs[0]: # Är vi i histogramet?
-            x, y = event.xdata, event.ydata # Avrundar till heltal för aa de e mer nice kanske
+        if event.inaxes is self.axs[0]:             # Är vi i histogramet?
+            x, y = event.xdata, event.ydata         # Avrundar till heltal för aa de e mer nice kanske
             
             startCellX, startCellY = koordsTillCell(self.position[0], self.position[1], self.uppdelning, self.xedges, self.yedges)
             goalCellX, goalCellY = koordsTillCell(x, y, self.uppdelning, self.xedges, self.yedges)
@@ -37,15 +37,18 @@ class Karta:
             start = (startCellX, startCellY)
             goal = (goalCellX, goalCellY)
 
-            route = astar(self.grid, start, goal)       # Punkter roboten måste ta sig till i ordning
+            route = astar(self.grid, start, goal)   # Punkter roboten måste ta sig till i ordning
             assert(route != None)
             
             route = route + [start]
             route = route[::-1]
 
             stig_x, stig_y = stigTillKoords(route, self.uppdelning, self.xedges, self.yedges)
-            self.axs[0].plot(stig_x, stig_y)            # Plotta vägen roboten ska gå
-            
+            self.axs[0].plot(stig_x, stig_y)        # Plotta vägen roboten ska gå
+
+            self.position = (stig_x[-1], stig_y[-1])
+            self.axs[0].plot(*self.position, '^')   # Markera vart roboten är i koordinatsystemet
+
             plt.draw()
 
     def läs(self, kö: queue.Queue):
@@ -81,7 +84,7 @@ class Karta:
         # Returnera informationen som ska lagras i databasen tillsammans med positionen.
         return {'x': x, 'y': y}
 
-    def uppdatera(self):
+    def uppdatera(self):        # TODO omfaktorisera, för mycket kod
         ''' 
         Uppdatera kartan med nya värden.
         '''
