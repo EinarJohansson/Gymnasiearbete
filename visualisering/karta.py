@@ -5,7 +5,7 @@ from koordinat import Koordinat
 from databas import Databas
 from math import cos, sin, pi, sqrt
 import numpy as np
-from stig import astar, stigTillKoords, koordTillCell
+from stig import astar, stigTillKoords, koordsTillCell
 
 class Karta:
     '''
@@ -19,11 +19,34 @@ class Karta:
         self.db = Databas()
 
         self.fig, self.axs = plt.subplots(1, 2)                 # En rad, två kolumner
+        self.fig.canvas.mpl_connect('button_press_event', self.onclick)
+        
         self.cb = None                                          # Colorbaren för histogramet
         
         self.grid, self.xedges, self.yedges = None, None, None  # Bestäms av histogramet i uppdatera
         
         self.position = (0, 0)                                  # Robotens startpostion markeras från origo
+
+    def onclick(self, event):
+        if event.inaxes is self.axs[0]: # Är vi i histogramet?
+            x, y = event.xdata, event.ydata # Avrundar till heltal för aa de e mer nice kanske
+            
+            startCellX, startCellY = koordsTillCell(self.position[0], self.position[1], self.uppdelning, self.xedges, self.yedges)
+            goalCellX, goalCellY = koordsTillCell(x, y, self.uppdelning, self.xedges, self.yedges)
+
+            start = (startCellX, startCellY)
+            goal = (goalCellX, goalCellY)
+
+            route = astar(self.grid, start, goal)       # Punkter roboten måste ta sig till i ordning
+            assert(route != None)
+            
+            route = route + [start]
+            route = route[::-1]
+
+            stig_x, stig_y = stigTillKoords(route, self.uppdelning, self.xedges, self.yedges)
+            self.axs[0].plot(stig_x, stig_y)            # Plotta vägen roboten ska gå
+            
+            plt.draw()
 
     def läs(self, kö: queue.Queue):
         '''
@@ -86,34 +109,17 @@ class Karta:
                y.append(koordinat['y'])
 
         # https://en.wikipedia.org/wiki/Histogram#Square-root_choice
-        uppdelning = int(sqrt(len(x))) or 50
-        print('Bins =', uppdelning)
+        self.uppdelning = int(sqrt(len(x))) or 50
+        print('Bins =', self.uppdelning)
 
         # Visa frekvensen av träffar för alla väggars koordinater
-        counts, self.xedges, self.yedges, im = self.axs[0].hist2d(x, y, bins=uppdelning, cmap=plt.cm.Reds, cmin=1)
+        counts, self.xedges, self.yedges, im = self.axs[0].hist2d(x, y, bins=self.uppdelning, cmap=plt.cm.Reds, cmin=1)
         
         counts = np.array(counts)                   # 2D array representation
         counts[np.isnan(counts)] = 0                # Fria rutor representeras som nollor
         counts[np.greater(counts, 1)] = 1           # Upptagna rutor representeras som ettor
         
-        counts = counts.astype(np.uint8)            # Gör om floats till unsigned ints
-        self.grid = np.rot90(counts, -1)            # Rotera arrayen -90 grader
-
-        print(self.grid)
-        start = (0,0) # Endast test värden for now
-        goal = (1,1) # TODO Gör funktion som konverterar cell koordianter till karteiska koordinater
-
-        route = astar(self.grid, start, goal)       # Punkter roboten måste ta sig till i ordning
-        assert(route != None)
-        print(route)
-        
-        route = route + [start]
-        route = route[::-1]
-
-        print(route)
-
-        stig_x, stig_y = stigTillKoords(route, uppdelning, self.xedges, self.yedges)
-        self.axs[0].plot(stig_x, stig_y)            # Plotta vägen roboten ska gå
+        self.grid = counts.astype(np.uint8)         # Gör om floats till unsigned ints
 
         self.axs[0].plot(*self.position, '^')       # Markera vart roboten är i histogramet
 

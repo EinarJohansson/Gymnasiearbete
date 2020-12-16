@@ -1,13 +1,16 @@
 import numpy as np
 import heapq
 
-def heuristic(a, b): # Annan h funktion för icke diagonal stig
+def heuristic(a, b): # TODO Annan h funktion för icke diagonal stig
     return np.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
 
 # https://www.analytics-link.com/post/2018/09/14/applying-the-a-path-finding-algorithm-in-python-part-1-2d-square-grid
 def astar(array, start, goal):
-    # neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Diagonalt!
-    neighbors = [(0,1),(0,-1),(1,0),(-1,0)]
+    '''
+    Returnerar stigen enligt griden.
+    '''
+    neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Diagonalt!
+    #neighbors = [(0,1),(0,-1),(1,0),(-1,0)] # Upp, ner, höger, vänster
 
     close_set = set()
     came_from = {}
@@ -18,7 +21,7 @@ def astar(array, start, goal):
     
     while oheap:
         current = heapq.heappop(oheap)[1]
-        if current == goal:
+        if current == goal: # Om vi kommit i mål
             data = []
             while current in came_from:
                 data.append(current)
@@ -27,7 +30,7 @@ def astar(array, start, goal):
 
         close_set.add(current)
         for i, j in neighbors:
-            neighbor = current[0] + i, current[1] + j            
+            neighbor = current[0] + i, current[1] + j
             tentative_g_score = gscore[current] + heuristic(current, neighbor)
             if 0 <= neighbor[0] < array.shape[0]:
                 if 0 <= neighbor[1] < array.shape[1]:                
@@ -47,26 +50,38 @@ def astar(array, start, goal):
                 fscore[neighbor] = tentative_g_score + heuristic(neighbor, goal)
                 heapq.heappush(oheap, (fscore[neighbor], neighbor))
 
-def koordTillCell(x, y):
-    pass
+def koordsTillCell(x, y, bins, x_edges, y_edges) -> tuple:    
+    max_x, min_x = max(x_edges), min(x_edges)
+    max_y, min_y = max(y_edges), min(y_edges)
 
-def stigTillKoords(stig, bins, x_edges, y_edges): # TODO Gör så funktionen gör det den faktiskt ska göra smh
+    x_tot, y_tot = (max_x - min_x), (max_y - min_y) 
+
+    d_x, d_y = x_tot / bins, y_tot / bins
+
+    # hur många dx från min_x tills vi är i x?
+    cellx = (x-min_x) / d_x # varje x-ruta (cm)
+    celly = (y-min_y) / d_y # varje y-ruta (cm)
+
+    return int(cellx), int(celly)
+
+def stigTillKoords(stig, bins, x_edges, y_edges) -> tuple: # TODO Gör så funktionen gör det den faktiskt ska göra smh
     '''
     Mappa stegen till olika kooridnater i koordinatsystemet.  
     '''
     max_x, min_x = max(x_edges), min(x_edges)
     max_y, min_y = max(y_edges), min(y_edges)
-    print('max_x:', max_x)
-    print('min_x:', min_x)
-    print('max_y:', max_y)
-    print('min_y:', min_y)
     
     x_koords = [steg[0] for steg in stig]
     y_koords = [steg[1] for steg in stig]
 
     d_x = (max_x - min_x) / bins
     d_y = (max_y - min_y) / bins
-    print('varje x-ruta(cm): ', d_x)
-    print('varje y-ruta(cm): ', d_y)
 
-    return x_koords, y_koords
+    test_x , test_y = [], []
+    for steg in stig:
+        x = min_x + steg[0] * d_x
+        y = min_y + steg[1] * d_y
+        test_x.append(x)
+        test_y.append(y)
+    
+    return test_x, test_y
