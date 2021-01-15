@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 from koordinat import Koordinat
 from databas import Databas
-from math import cos, sin, pi, sqrt
+from math import cos, sin, pi, sqrt, atan, degrees, radians
+
 import numpy as np
 from stig import astar, stigTillKoords, koordsTillCell
 
@@ -26,9 +27,11 @@ class Karta:
         self.grid, self.xedges, self.yedges = None, None, None
         
         self.position = (0, 0)                      # Robotens startpostion markeras från origo
-
+        self.summaV = 0                             # Summan av alla vinklar som svängts
+    
     def onclick(self, event):
-        if event.inaxes is self.axs[0]:             # Är vi i histogramet?
+        # Är vi i histogramet?
+        if event.dblclick and event.inaxes is self.axs[0]:
             x, y = event.xdata, event.ydata         # Avrundar till heltal för aa de e mer nice kanske
             
             startCellX, startCellY = koordsTillCell(self.position[0], self.position[1], self.uppdelning, self.xedges, self.yedges)
@@ -45,11 +48,102 @@ class Karta:
 
             stig_x, stig_y = stigTillKoords(route, self.uppdelning, self.xedges, self.yedges)
             self.axs[0].plot(stig_x, stig_y)        # Plotta vägen roboten ska gå
+            
+            steg = tuple(zip(stig_x, stig_y))
+            stig = self.polärStig(steg)
 
-            self.position = (stig_x[-1], stig_y[-1])
             self.axs[0].plot(*self.position, '^')   # Markera vart roboten är i koordinatsystemet
 
             plt.draw()
+
+
+    def polärStig(self, stig) -> tuple:
+        '''
+        Konverterar en stig med karteiska koordinater till en stig med polära koordinater.
+        '''
+
+        l = []
+        for x, y in stig:
+            print('Robotens postion: ', self.position)
+            print('Nästa postition: ', (x, y))
+
+            dx = x - self.position[0]
+            dy = y - self.position[1]
+
+            print('Skillnad mellan x: ', dx)
+            print('Skillnad mellan y: ', dy)
+
+            print('SummaV:  self.summaV)
+            
+            '''
+            1 - höger
+            2 - vänster
+            3 - upp
+            4 - ner
+            '''
+            if dx != 0:     # Gå horizontellt
+                riktning = 1 if dx > 0 else 2 
+                r = abs(dx)
+            elif dy != 0:   # Gå vertikalt
+                riktning = 3 if dy > 0 else 4
+                r = abs(dy)
+            else:           # Gå ingenstans
+                r = 0
+                v = 0
+                riktning = False
+            
+            # Om vinkelsumman är större än 360, använd periodiciteten
+            if self.summaV >= 360:
+                self.summaV %= 360
+
+            if self.summaV == 0 or self.summaV == 360:    # nosen fram
+                # höger = 90
+                # vänster = -90
+                # upp = 0
+                # ner = 180
+                svängningar = [90, -90, 0, 180]
+                print('nosen är uppåt')
+                if riktning:
+                    v = radians(svängningar[riktning-1])
+            elif self.summaV == 90 or self.summaV == -270: # nosen åt höger
+                # höger = 0
+                # vänster = 180
+                # upp = -90
+                # ner = 90
+                svängningar = [0, 180, -90, 90]
+                print('nosen är åt höger')
+                if riktning:
+                    v = radians(svängningar[riktning-1])
+            elif self.summaV == 180 or self.summaV == -180: # nosen ner
+                # höger = -90
+                # vänster = 90
+                # upp = 180
+                # ner = 0
+                svängningar = [-90, 90, 180, 0]
+                print('nosen är neråt')
+                if riktning:
+                    v = radians(svängningar[riktning-1])
+            elif self.summaV == 270 or self.summaV == -90: # nosen åt vänster
+                # höger = 180
+                # vänster = 0
+                # upp = 90
+                # ner = -90
+                print('nosen är åt vänster')
+                svängningar = [180, 0, 90, -90]
+                if riktning:
+                    v = radians(svängningar[riktning-1])
+            else:
+                print('oj är det nåt skumt med vinkelsumman')
+                print('summan av vinklarna är: ', self.summaV)
+            
+            print('\nr: ', round(r, 1), '\nv: ', round(degrees(v), 1), '\n\n')
+            
+            if r and v:
+                l.append((r, v))
+
+            self.position = (x, y)      # Uppdatera robotens position 
+            self.summaV += degrees(v)   # Öka vinkelsumma
+        return l
 
     def läs(self, kö: queue.Queue):
         '''

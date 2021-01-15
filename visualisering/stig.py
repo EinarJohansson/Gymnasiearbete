@@ -9,8 +9,8 @@ def astar(array, start, goal):
     '''
     Returnerar stigen enligt griden.
     '''
-    neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Diagonalt!
-    #neighbors = [(0,1),(0,-1),(1,0),(-1,0)] # Upp, ner, höger, vänster
+    #neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Diagonalt!
+    neighbors = [(0,1),(0,-1),(1,0),(-1,0)] # Upp, ner, höger, vänster
 
     close_set = set()
     came_from = {}
@@ -64,7 +64,7 @@ def koordsTillCell(x, y, bins, x_edges, y_edges) -> tuple:
 
     return int(cellx), int(celly)
 
-def stigTillKoords(stig, bins, x_edges, y_edges) -> tuple: # TODO Gör så funktionen gör det den faktiskt ska göra smh
+def stigTillKoords(stig, bins, x_edges, y_edges) -> tuple:
     '''
     Mappa stegen till olika kooridnater i koordinatsystemet.  
     '''
