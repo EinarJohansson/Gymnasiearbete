@@ -12,6 +12,7 @@ class Server:
         self.address = (self.serverIP(), 8888)
         self.sock.bind(self.address)
         self.kö = queue.Queue()
+        self.klient_addr = 0
     
     def __del__(self):
         self.sock.close()
@@ -46,13 +47,25 @@ class Server:
         while True:
             # Buffert på 1024 bytes
             data, addr = self.sock.recvfrom(1024)
+            if addr != self.klient_addr:
+                print(addr)
+                self.klient_addr = addr
+            
             # print('Tog emot:', str(data, 'utf-8'))
 
             # Skicka tillbaks ett svar
-            self.sock.sendto(str.encode('Tja!'), addr)
-
+            self.sock.sendto(str.encode('Tja!'), self.klient_addr)
             # Lägg till data i kön som kartan sedan avläser
             self.kö.put(str(data, 'utf-8'))
+    '''
+    Skicka ett meddelande till servern
+    '''
+    def skicka(self, meddelande):
+        if self.klient_addr:
+            self.sock.sendto(str.encode(meddelande), self.klient_addr)
+        else:
+            raise Exception('Servern vet inte vart meddelandet ska') 
 
 if __name__ == "__main__":
     s = Server()
+    s.lyssna()

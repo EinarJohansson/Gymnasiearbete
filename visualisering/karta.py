@@ -4,7 +4,6 @@ import matplotlib.animation as anim
 from koordinat import Koordinat
 from databas import Databas
 from math import cos, sin, pi, sqrt, atan, degrees, radians
-
 import numpy as np
 from stig import astar, stigTillKoords, koordsTillCell
 
@@ -28,12 +27,11 @@ class Karta:
         
         self.position = (0, 0)                      # Robotens startpostion markeras från origo
         self.summaV = 0                             # Summan av alla vinklar som svängts
-    
+        
     def onclick(self, event):
         # Är vi i histogramet?
         if event.dblclick and event.inaxes is self.axs[0]:
-            x, y = event.xdata, event.ydata         # Avrundar till heltal för aa de e mer nice kanske
-            
+            x, y = event.xdata, event.ydata         # Positionen som klickades
             startCellX, startCellY = koordsTillCell(self.position[0], self.position[1], self.uppdelning, self.xedges, self.yedges)
             goalCellX, goalCellY = koordsTillCell(x, y, self.uppdelning, self.xedges, self.yedges)
 
@@ -50,12 +48,19 @@ class Karta:
             self.axs[0].plot(stig_x, stig_y)        # Plotta vägen roboten ska gå
             
             steg = tuple(zip(stig_x, stig_y))
-            stig = self.polärStig(steg)
-
+            polär_stig = self.polärStig(steg)  # Stigen i polär format
+            
             self.axs[0].plot(*self.position, '^')   # Markera vart roboten är i koordinatsystemet
 
-            plt.draw()
+            # Skicka koordinaterna till klienten
+            if hasattr(self, 'skicka'):
+                print('Skickar t klienten')
+                for r, v in polär_stig:
+                    data = str(round(degrees(r))) + ';' + str(round(degrees(v)))
+                    print(data)
+                    self.skicka(data)
 
+            plt.draw()
 
     def polärStig(self, stig) -> tuple:
         '''
@@ -73,7 +78,7 @@ class Karta:
             print('Skillnad mellan x: ', dx)
             print('Skillnad mellan y: ', dy)
 
-            print('SummaV:  self.summaV)
+            print('SummaV:', self.summaV)
             
             '''
             1 - höger
@@ -145,7 +150,7 @@ class Karta:
             self.summaV += degrees(v)   # Öka vinkelsumma
         return l
 
-    def läs(self, kö: queue.Queue):
+    def läs(self, kö: queue.Queue): # Få med servern
         '''
         Hämta och spara senaste koordinaten från kön.
         '''
@@ -156,11 +161,15 @@ class Karta:
             if (self.position is not (koord.x, koord.y)):
                 self.position = (koord.x, koord.y)
 
+            print(len(self.koordinater))
+
             vägg = self.konvertera(koord)
             self.koordinater.append(vägg)
 
             if len(self.koordinater) == 180:
+                # Spara koordianterna
                 self.db.spara(self.koordinater, self.position) 
+                # Gör rum för nya koordinater
                 self.koordinater.clear()
                 # Uppdatera grafen
                 self.uppdatera()
@@ -178,9 +187,24 @@ class Karta:
         # Returnera informationen som ska lagras i databasen tillsammans med positionen.
         return {'x': x, 'y': y}
 
-    def uppdatera(self):        # TODO omfaktorisera, för mycket kod
-        ''' 
-        Uppdatera kartan med nya värden.
+    def hämta_data(self):
+        '''
+        Hämta koordinater från databasen.
+        '''
+        cursor = self.db.kista({'_id': 0, 'koordinater': 1})
+        x, y = [], []
+
+        for koordinater in cursor:
+            for koordinat in koordinater['koordinater']:
+                x.append(koordinat['x'])
+                y.append(koordinat['y'])
+
+        cursor.close()          # Stäng ner handtaget till databasen
+        return x, y
+
+    def rita(self, x, y):       # TODO omfaktorisera, för mycket kod
+        '''
+        Rita ut allt som ska synas på kartan.
         '''
         self.axs[0].cla()       # Rensa histogramet
         self.axs[1].cla()       # Rensa koordinatsystemet
@@ -195,15 +219,6 @@ class Karta:
         self.axs[1].set_title('Senaste skanningen')
         self.axs[1].set_ylabel('cm')
         self.axs[1].set_xlabel('cm')
-
-        cursor = self.db.kista({'_id': 0, 'koordinater': 1})
-
-        x, y = [], []
-
-        for koordinater in cursor:
-           for koordinat in koordinater['koordinater']:
-               x.append(koordinat['x'])
-               y.append(koordinat['y'])
 
         # https://en.wikipedia.org/wiki/Histogram#Square-root_choice
         self.uppdelning = int(sqrt(len(x))) or 50
@@ -226,6 +241,19 @@ class Karta:
         self.axs[1].scatter(x[-180:], y[-180:])     # Visa senaste skanningen i ett koordinatsystem
         self.axs[1].plot(*self.position, '^')       # Markera vart roboten är i koordinatsystemet
 
-        plt.show()                                  # Rita de uppdaterade värdena
+    def visa(self, skicka):
+        ''' 
+        Visa kartan första gången.
+        '''
+        x,y = self.hämta_data()
+        self.rita(x,y)
+        self.skicka = skicka
+        plt.show()
 
-        cursor.close()                              # Stäng ner handtaget till databasen
+    def uppdatera(self):
+        ''' 
+        Uppdatera kartan med nya värden.
+        '''
+        x,y = self.hämta_data()
+        self.rita(x,y)
+        plt.draw()              # Rita de uppdaterade värdena

@@ -15,7 +15,7 @@ def main():
     tråd1.start()
     tråd2.start()
 
-    karta.uppdatera()
+    karta.visa(server.skicka)
 
 if __name__ == '__main__':
     main()
