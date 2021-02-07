@@ -49,11 +49,12 @@ String Klient::lyssna()
 
         return String(inkommandePaket);
     }
+    else return String("slut");
 }
 
 // Prata med servern.
 void Klient::prata(char* meddelande)
-{    
+{
     // Skicka meddelandet servern.
     if (Udp.beginPacket(ip, port))
     {

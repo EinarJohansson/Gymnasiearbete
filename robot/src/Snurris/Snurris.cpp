@@ -44,8 +44,8 @@ void snurra(Servo &servo, Klient &klient) {
     String stig = klient.lyssna();
     Serial.println(stig);
     
-    DCmotorer.setMotorA(200,1);
-    DCmotorer.setMotorB(200,0);
+    DCmotorer.setMotorA(1000,1);
+    DCmotorer.setMotorB(1000,1);
     delay(2000);
     //Stop both motors
     DCmotorer.stopMotors();
