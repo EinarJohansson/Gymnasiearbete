@@ -54,7 +54,7 @@ class Server:
             # print('Tog emot:', str(data, 'utf-8'))
 
             # Skicka tillbaks ett svar
-            self.sock.sendto(str.encode('Tja!'), self.klient_addr)
+            #self.sock.sendto(str.encode('Tja!'), self.klient_addr)
             # Lägg till data i kön som kartan sedan avläser
             self.kö.put(str(data, 'utf-8'))
     '''
